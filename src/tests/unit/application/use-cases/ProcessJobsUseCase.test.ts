@@ -29,6 +29,7 @@ describe('ProcessJobsUseCase', () => {
           title: 'Unity Developer',
           url: 'https://example.com/job1',
           site: 'Site1',
+          text: 'Looking for Unity and WebGL experience',
         }),
       ],
       getName: () => 'Scraper1',
@@ -41,6 +42,7 @@ describe('ProcessJobsUseCase', () => {
           title: 'Frontend Developer',
           url: 'https://example.com/job2',
           site: 'Site2',
+          text: 'React and TypeScript required',
         }),
       ],
       getName: () => 'Scraper2',
@@ -55,7 +57,11 @@ describe('ProcessJobsUseCase', () => {
     };
 
     // Real scoring service with test keywords
-    scoringService = new JobScoringService(['unity', 'webgl'], 1);
+    const keywords = ['unity', 'webgl'];
+    scoringService = new JobScoringService(
+      { keywords, minScore: 1 },
+      { keywords, minScore: 1 }
+    );
 
     useCase = new ProcessJobsUseCase(
       mockRepository,
@@ -121,6 +127,7 @@ describe('ProcessJobsUseCase', () => {
             title: 'WebGL Specialist',
             url: 'https://example.com/job3',
             site: 'Site3',
+            text: 'Expert in WebGL and Unity graphics programming',
           }),
         ],
         getName: () => 'Scraper3',

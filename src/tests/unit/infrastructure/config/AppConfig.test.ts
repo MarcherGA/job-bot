@@ -38,15 +38,23 @@ describe('AppConfig', () => {
       expect(config.sites.length).toBeGreaterThan(0);
     });
 
-    it('should have default filters configuration', () => {
+    it('should have default filters configuration with title and description', () => {
       // Act
       const config = AppConfig.load();
 
-      // Assert
-      expect(Array.isArray(config.filters.keywords)).toBe(true);
-      expect(config.filters.keywords.length).toBeGreaterThan(0);
-      expect(typeof config.filters.minScore).toBe('number');
-      expect(config.filters.minScore).toBeGreaterThanOrEqual(1);
+      // Assert - Title filters
+      expect(config.filters.title).toBeDefined();
+      expect(Array.isArray(config.filters.title.keywords)).toBe(true);
+      expect(config.filters.title.keywords.length).toBeGreaterThan(0);
+      expect(typeof config.filters.title.minScore).toBe('number');
+      expect(config.filters.title.minScore).toBeGreaterThanOrEqual(0);
+
+      // Assert - Description filters
+      expect(config.filters.description).toBeDefined();
+      expect(Array.isArray(config.filters.description.keywords)).toBe(true);
+      expect(config.filters.description.keywords.length).toBeGreaterThan(0);
+      expect(typeof config.filters.description.minScore).toBe('number');
+      expect(config.filters.description.minScore).toBeGreaterThanOrEqual(0);
     });
 
     it('should have default cron schedule', () => {
@@ -71,12 +79,13 @@ describe('AppConfig', () => {
       expect(config.notifier.telegramChatId).toBeUndefined();
     });
 
-    it('should validate that minScore is positive', () => {
+    it('should validate that minScore is non-negative', () => {
       // This test verifies the schema validates properly
       // We can't easily test Zod validation errors without more setup
       // but we can verify the structure
       const config = AppConfig.load();
-      expect(config.filters.minScore).toBeGreaterThan(0);
+      expect(config.filters.title.minScore).toBeGreaterThanOrEqual(0);
+      expect(config.filters.description.minScore).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -114,7 +123,7 @@ describe('AppConfig', () => {
   });
 
   describe('getFilterConfig', () => {
-    it('should return filter configuration', () => {
+    it('should return filter configuration with title and description', () => {
       // Arrange
       const config = AppConfig.load();
 
@@ -122,9 +131,15 @@ describe('AppConfig', () => {
       const filterConfig = config.filters;
 
       // Assert
-      expect(filterConfig.keywords).toBeDefined();
-      expect(filterConfig.minScore).toBeDefined();
-      expect(Array.isArray(filterConfig.keywords)).toBe(true);
+      expect(filterConfig.title).toBeDefined();
+      expect(filterConfig.title.keywords).toBeDefined();
+      expect(filterConfig.title.minScore).toBeDefined();
+      expect(Array.isArray(filterConfig.title.keywords)).toBe(true);
+
+      expect(filterConfig.description).toBeDefined();
+      expect(filterConfig.description.keywords).toBeDefined();
+      expect(filterConfig.description.minScore).toBeDefined();
+      expect(Array.isArray(filterConfig.description.keywords)).toBe(true);
     });
   });
 

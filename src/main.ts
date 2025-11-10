@@ -19,7 +19,11 @@ async function main() {
 
   // 1. Load configuration
   const config = AppConfig.load();
-  console.log(`Loaded config with ${config.sites.length} sites, ${config.filters.keywords.length} keywords`);
+  console.log(
+    `Loaded config with ${config.sites.length} sites, ` +
+    `${config.filters.title.keywords.length} title keywords, ` +
+    `${config.filters.description.keywords.length} description keywords`
+  );
 
   // 2. Initialize database
   const dbConnection = DatabaseConnection.initialize('./data/jobs.db');
@@ -51,8 +55,8 @@ async function main() {
 
   // 6. Create scoring service
   const scoringService = new JobScoringService(
-    config.filters.keywords,
-    config.filters.minScore
+    config.filters.title,
+    config.filters.description
   );
 
   // 7. Create use case

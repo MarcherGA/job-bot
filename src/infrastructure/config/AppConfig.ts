@@ -6,9 +6,14 @@ const NotifierConfigSchema = z.object({
   telegramChatId: z.string().optional(),
 });
 
-const FilterConfigSchema = z.object({
+const FilterSubConfigSchema = z.object({
   keywords: z.array(z.string()),
-  minScore: z.number().positive(),
+  minScore: z.number().nonnegative(),
+});
+
+const FilterConfigSchema = z.object({
+  title: FilterSubConfigSchema,
+  description: FilterSubConfigSchema,
 });
 
 const AppConfigSchema = z.object({
@@ -43,30 +48,53 @@ export class AppConfig {
         },
         // Example RSS-based board
         {
-          name: 'ExampleRSS',
+          name: 'RemoteGameJobsRSS',
           type: 'rss',
-          rssUrl: 'https://example.com/jobs.rss',
+          rssUrl: 'https://remotegamejobs.com/feed.rss',
+        },
+        {
+          name: 'WorkWithIndiesRSS',
+          type: 'rss',
+          rssUrl: 'https://www.workwithindies.com/careers/rss.xml',
         },
       ],
       filters: {
-        keywords: [
-          'unity',
-          'unity3d',
-          'three.js',
-          'threejs',
-          'react-three-fiber',
-          'r3f',
-          'babylon.js',
-          'webgl',
-          'web gpu',
-          '3d web',
-          'game dev',
-          'game developer',
-          'c#',
-          'shader',
-          'unreal',
-        ],
-        minScore: 1,
+        title: {
+          keywords: [
+            'unity',
+            'unity3d',
+            'three.js',
+            'threejs',
+            'react-three-fiber',
+            'r3f',
+            'babylon.js',
+            'webgl',
+            'web gpu',
+            '3d web',
+            'game dev',
+            'game developer',
+          ],
+          minScore: 1,
+        },
+        description: {
+          keywords: [
+            'unity',
+            'unity3d',
+            'three.js',
+            'threejs',
+            'react-three-fiber',
+            'r3f',
+            'babylon.js',
+            'webgl',
+            'web gpu',
+            '3d web',
+            'game dev',
+            'game developer',
+            'c#',
+            'shader',
+          ],
+          minScore: 1,
+        },
       },
       notifier: {
         telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
