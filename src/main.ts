@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import 'dotenv/config';
 import cron from 'node-cron';
 import { AppConfig } from './infrastructure/config/AppConfig';
 import { DatabaseConnection } from './infrastructure/database/DatabaseConnection';
