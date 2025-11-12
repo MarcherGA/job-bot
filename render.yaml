@@ -1,0 +1,15 @@
+services:
+  - type: worker
+    runtime: node
+    name: vacanseek
+    region: oregon # or frankfurt, singapore depending on your location
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: NODE_ENV
+        value: production
