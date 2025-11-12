@@ -2,7 +2,7 @@ services:
   - type: worker
     runtime: node
     name: vacanseek
-    region: oregon # or frankfurt, singapore depending on your location
+    region: frankfurt # or frankfurt, singapore depending on your location
     plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
