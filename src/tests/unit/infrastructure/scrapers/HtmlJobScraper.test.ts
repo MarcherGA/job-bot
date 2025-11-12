@@ -206,6 +206,93 @@ describe('HtmlJobScraper', () => {
     });
   });
 
+  describe('custom headers', () => {
+    it('should use custom User-Agent when provided', async () => {
+      // Arrange
+      const customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+      const config = {
+        name: 'CustomUASite',
+        url: 'https://example.com/jobs',
+        listSelector: '.job',
+        titleSelector: '.title',
+        urlSelector: 'a',
+        userAgent: customUserAgent,
+      };
+
+      const mockHtml = `
+        <html>
+          <body>
+            <div class="job">
+              <a href="/job/1">
+                <h3 class="title">Test Job</h3>
+              </a>
+            </div>
+          </body>
+        </html>
+      `;
+
+      mockAxios.onGet('https://example.com/jobs').reply((config) => {
+        // Verify the User-Agent header was sent
+        expect(config.headers?.['User-Agent']).toBe(customUserAgent);
+        return [200, mockHtml];
+      });
+
+      const scraper = new HtmlJobScraper(config);
+
+      // Act
+      const jobs = await scraper.scrape();
+
+      // Assert
+      expect(jobs).toHaveLength(1);
+    });
+
+    it('should include additional headers when provided', async () => {
+      // Arrange
+      const config = {
+        name: 'ExtraHeadersSite',
+        url: 'https://example.com/jobs',
+        listSelector: '.job',
+        titleSelector: '.title',
+        urlSelector: 'a',
+        additionalHeaders: {
+          'Accept': 'text/html,application/xhtml+xml',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Referer': 'https://www.google.com/',
+        },
+      };
+
+      const mockHtml = `
+        <html>
+          <body>
+            <div class="job">
+              <a href="/job/1">
+                <h3 class="title">Test Job</h3>
+              </a>
+            </div>
+          </body>
+        </html>
+      `;
+
+      mockAxios.onGet('https://example.com/jobs').reply((config) => {
+        // Verify additional headers were sent
+        expect(config.headers?.['Accept']).toBe('text/html,application/xhtml+xml');
+        expect(config.headers?.['Accept-Language']).toBe('en-US,en;q=0.5');
+        expect(config.headers?.['Referer']).toBe('https://www.google.com/');
+        // User-Agent should still be default
+        expect(config.headers?.['User-Agent']).toBe('ItayJobBot/1.0 (+https://example.com)');
+        return [200, mockHtml];
+      });
+
+      const scraper = new HtmlJobScraper(config);
+
+      // Act
+      const jobs = await scraper.scrape();
+
+      // Assert
+      expect(jobs).toHaveLength(1);
+    });
+  });
+
   describe('getName', () => {
     it('should return the configured site name', () => {
       // Arrange

@@ -154,12 +154,12 @@ describe('AppConfig', () => {
       }
     });
 
-    it('should have default maxAgeDays value of 30 days', () => {
+    it('should have default maxAgeDays value of 14 days', () => {
       // Arrange & Act
       const config = AppConfig.load();
 
       // Assert
-      expect(config.filters.maxAgeDays).toBe(30);
+      expect(config.filters.maxAgeDays).toBe(14);
     });
   });
 

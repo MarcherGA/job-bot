@@ -5,7 +5,11 @@ import RSSParser from 'rss-parser';
 export interface RssScraperConfig {
   name: string;
   rssUrl: string;
+  userAgent?: string;
+  additionalHeaders?: Record<string, string>;
 }
+
+const DEFAULT_USER_AGENT = 'ItayJobBot/1.0 (+https://example.com)';
 
 /**
  * RSS-based job scraper implementation
@@ -14,7 +18,19 @@ export class RssJobScraper implements IJobScraper {
   private parser: RSSParser;
 
   constructor(private config: RssScraperConfig, parser?: RSSParser) {
-    this.parser = parser || new RSSParser();
+    if (parser) {
+      this.parser = parser;
+    } else {
+      const userAgent = this.config.userAgent || DEFAULT_USER_AGENT;
+      const headers: Record<string, string> = {
+        'User-Agent': userAgent,
+        ...this.config.additionalHeaders,
+      };
+
+      this.parser = new RSSParser({
+        headers,
+      });
+    }
   }
 
   async scrape(): Promise<Job[]> {

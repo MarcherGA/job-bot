@@ -47,8 +47,18 @@ export class AppConfig {
           companySelector: '.job-company',
           dateSelector: '.posted-at',
         },
-        // Example RSS-based board
         {
+          name: 'GameJobs',
+          type: 'html',
+          url: 'https://gamejobs.co',
+          listSelector: '.job',
+          titleSelector: 'a.title',
+          urlSelector: 'a.c',
+          companySelector: 'a[href^="/search?c="]',
+          userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+        },
+        {
+
           name: 'RemoteGameJobsRSS',
           type: 'rss',
           rssUrl: 'https://remotegamejobs.com/feed.rss',
@@ -103,7 +113,7 @@ export class AppConfig {
             'typescript',
             'javascript',
           ],
-          minScore: 1,
+          minScore: 0,
         },
         maxAgeDays: 14,
       },

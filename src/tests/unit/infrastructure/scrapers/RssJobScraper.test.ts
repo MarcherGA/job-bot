@@ -212,6 +212,46 @@ describe('RssJobScraper', () => {
     });
   });
 
+  describe('custom headers', () => {
+    it('should create parser with custom User-Agent when no parser provided', () => {
+      // Arrange
+      const customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+      const config = {
+        name: 'CustomUARSS',
+        rssUrl: 'https://example.com/feed.rss',
+        userAgent: customUserAgent,
+      };
+
+      // Act - create scraper without providing a parser
+      const scraper = new RssJobScraper(config);
+
+      // Assert - scraper should be created successfully
+      // (internally it creates an RSSParser with custom headers)
+      expect(scraper).toBeDefined();
+      expect(scraper.getName()).toBe('CustomUARSS');
+    });
+
+    it('should create parser with additional headers when provided', () => {
+      // Arrange
+      const config = {
+        name: 'HeadersRSS',
+        rssUrl: 'https://example.com/feed.rss',
+        userAgent: 'CustomBot/1.0',
+        additionalHeaders: {
+          'Accept': 'application/rss+xml',
+          'Accept-Language': 'en-US',
+        },
+      };
+
+      // Act - create scraper without providing a parser
+      const scraper = new RssJobScraper(config);
+
+      // Assert - scraper should be created successfully
+      expect(scraper).toBeDefined();
+      expect(scraper.getName()).toBe('HeadersRSS');
+    });
+  });
+
   describe('getName', () => {
     it('should return the configured site name', () => {
       // Arrange

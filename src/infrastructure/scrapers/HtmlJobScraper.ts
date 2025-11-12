@@ -10,6 +10,8 @@ export interface HtmlScraperConfig {
   titleSelector: string;
   urlSelector: string;
   companySelector?: string;
+  userAgent?: string;
+  additionalHeaders?: Record<string, string>;
 }
 
 const USER_AGENT = 'ItayJobBot/1.0 (+https://example.com)';
@@ -22,8 +24,15 @@ export class HtmlJobScraper implements IJobScraper {
 
   async scrape(): Promise<Job[]> {
     try {
+      const userAgent = this.config.userAgent || USER_AGENT;
+
+      const headers: Record<string, string> = {
+        'User-Agent': userAgent,
+        ...this.config.additionalHeaders,
+      };
+
       const response = await axios.get<string>(this.config.url, {
-        headers: { 'User-Agent': USER_AGENT },
+        headers,
         timeout: 15000,
       });
 
