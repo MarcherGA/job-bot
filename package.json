@@ -1,7 +1,7 @@
 {
-  "name": "job-bot",
+  "name": "vacanseek",
   "version": "1.0.0",
-  "description": "A bot that aggregates job postings from various sources and notifies users based on their preferences.",
+  "description": "Your personal vacancy scout — always watching for new opportunities.",
   "main": "dist/main.js",
   "author": "Itay Levy",
   "license": "MIT",

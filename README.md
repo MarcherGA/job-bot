@@ -1,6 +1,12 @@
-# Job Bot
+<div align="center">
+  <img src="./logo.jpg" alt="VacanSeek Logo" width="200" height="200"/>
 
-An automated job scraper that monitors job boards, filters positions based on keywords, and sends notifications via Telegram.
+  # VacanSeek
+
+  **Your personal vacancy scout — always watching for new opportunities.**
+
+  An automated job scraper that monitors job boards, filters positions based on keywords, and sends notifications via Telegram.
+</div>
 
 ## Features
 
