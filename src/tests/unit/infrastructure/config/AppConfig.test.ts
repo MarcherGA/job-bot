@@ -141,6 +141,26 @@ describe('AppConfig', () => {
       expect(filterConfig.description.minScore).toBeDefined();
       expect(Array.isArray(filterConfig.description.keywords)).toBe(true);
     });
+
+    it('should include optional maxAgeDays in filter configuration', () => {
+      // Arrange & Act
+      const config = AppConfig.load();
+
+      // Assert
+      // maxAgeDays should be optional - either undefined or a positive number
+      if (config.filters.maxAgeDays !== undefined) {
+        expect(typeof config.filters.maxAgeDays).toBe('number');
+        expect(config.filters.maxAgeDays).toBeGreaterThan(0);
+      }
+    });
+
+    it('should have default maxAgeDays value of 30 days', () => {
+      // Arrange & Act
+      const config = AppConfig.load();
+
+      // Assert
+      expect(config.filters.maxAgeDays).toBe(30);
+    });
   });
 
   describe('getCronSchedule', () => {

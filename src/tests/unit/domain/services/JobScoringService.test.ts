@@ -70,7 +70,7 @@ describe('JobScoringService', () => {
         title: 'Game Developer',
         url: 'https://example.com/job/3',
         site: 'TestSite',
-        text: 'We need expertise in Unity3D, C#, and shader programming',
+        text: 'We need expertise in Unity, Unity3D, C#, and shader programming',
       });
 
       const keywords = ['unity', 'unity3d', 'c#', 'shader'];
@@ -523,6 +523,111 @@ describe('JobScoringService', () => {
 
       // Assert
       expect(filtered).toHaveLength(0);
+    });
+
+    it('should filter out jobs older than maxAgeDays', () => {
+      // Arrange
+      const now = new Date();
+      const thirtyOneDaysAgo = new Date(now.getTime() - 31 * 24 * 60 * 60 * 1000);
+      const twentyNineDaysAgo = new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000);
+
+      const jobs = [
+        new Job({
+          id: 'job-old',
+          title: 'Unity Developer',
+          url: 'https://example.com/job/old',
+          site: 'TestSite',
+          text: 'C# programming',
+          postedAt: thirtyOneDaysAgo,
+        }),
+        new Job({
+          id: 'job-recent',
+          title: 'Unity Developer',
+          url: 'https://example.com/job/recent',
+          site: 'TestSite',
+          text: 'C# programming',
+          postedAt: twentyNineDaysAgo,
+        }),
+      ];
+
+      const keywords = ['unity'];
+      const service = new JobScoringService(
+        { keywords, minScore: 1 },
+        { keywords, minScore: 0 },
+        30 // maxAgeDays
+      );
+
+      // Act
+      const filtered = service.filterJobs(jobs);
+
+      // Assert
+      expect(filtered).toHaveLength(1);
+      expect(filtered[0].id).toBe('job-recent'); // Only the recent job
+    });
+
+    it('should include all jobs when maxAgeDays is undefined', () => {
+      // Arrange
+      const now = new Date();
+      const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+      const jobs = [
+        new Job({
+          id: 'job-old',
+          title: 'Unity Developer',
+          url: 'https://example.com/job/old',
+          site: 'TestSite',
+          text: 'C# programming',
+          postedAt: sixtyDaysAgo,
+        }),
+        new Job({
+          id: 'job-recent',
+          title: 'Unity Developer',
+          url: 'https://example.com/job/recent',
+          site: 'TestSite',
+          text: 'C# programming',
+          postedAt: now,
+        }),
+      ];
+
+      const keywords = ['unity'];
+      const service = new JobScoringService(
+        { keywords, minScore: 1 },
+        { keywords, minScore: 0 }
+        // No maxAgeDays specified
+      );
+
+      // Act
+      const filtered = service.filterJobs(jobs);
+
+      // Assert
+      expect(filtered).toHaveLength(2); // Both jobs included (no age filtering)
+    });
+
+    it('should include jobs without postedAt date (backward compatibility)', () => {
+      // Arrange
+      const jobs = [
+        new Job({
+          id: 'job-no-date',
+          title: 'Unity Developer',
+          url: 'https://example.com/job/no-date',
+          site: 'TestSite',
+          text: 'C# programming',
+          // No postedAt
+        }),
+      ];
+
+      const keywords = ['unity'];
+      const service = new JobScoringService(
+        { keywords, minScore: 1 },
+        { keywords, minScore: 0 },
+        30 // maxAgeDays
+      );
+
+      // Act
+      const filtered = service.filterJobs(jobs);
+
+      // Assert
+      expect(filtered).toHaveLength(1); // Job without date should be included
     });
   });
 });

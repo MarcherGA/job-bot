@@ -14,6 +14,7 @@ const FilterSubConfigSchema = z.object({
 const FilterConfigSchema = z.object({
   title: FilterSubConfigSchema,
   description: FilterSubConfigSchema,
+  maxAgeDays: z.number().positive().optional(),
 });
 
 const AppConfigSchema = z.object({
@@ -71,10 +72,17 @@ export class AppConfig {
             'webgl',
             'web gpu',
             '3d web',
-            'game dev',
-            'game developer',
+            "3d",
+            'game',
+            'developer',
+            'programmer',
+            'engineer',
+            'graphics',
+            'vr',
+            'ar',
+            'gameplay',
           ],
-          minScore: 1,
+          minScore: 2,
         },
         description: {
           keywords: [
@@ -88,13 +96,16 @@ export class AppConfig {
             'webgl',
             'web gpu',
             '3d web',
-            'game dev',
-            'game developer',
             'c#',
             'shader',
+            'graphics',
+            'rendering',
+            'typescript',
+            'javascript',
           ],
           minScore: 1,
         },
+        maxAgeDays: 14,
       },
       notifier: {
         telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,

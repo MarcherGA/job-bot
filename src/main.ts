@@ -22,7 +22,8 @@ async function main() {
   console.log(
     `Loaded config with ${config.sites.length} sites, ` +
     `${config.filters.title.keywords.length} title keywords, ` +
-    `${config.filters.description.keywords.length} description keywords`
+    `${config.filters.description.keywords.length} description keywords, ` +
+    `maxAgeDays: ${config.filters.maxAgeDays ?? 'unlimited'}`
   );
 
   // 2. Initialize database
@@ -56,7 +57,8 @@ async function main() {
   // 6. Create scoring service
   const scoringService = new JobScoringService(
     config.filters.title,
-    config.filters.description
+    config.filters.description,
+    config.filters.maxAgeDays
   );
 
   // 7. Create use case
